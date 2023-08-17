@@ -10,7 +10,10 @@ from collections import defaultdict
 
 
 """
-This script generates a list of all of the vocabulary included in a page set."""
+This script generates a list of all of the vocabulary included in a page set.
+If page set contains multiple languages, each language will be listed separately
+
+"""
 
 exceptions = ['Atrás','Back','Copiar en botón','Copy to Button','Home','Inicio']
 

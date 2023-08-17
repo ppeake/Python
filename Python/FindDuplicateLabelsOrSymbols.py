@@ -10,11 +10,12 @@ from collections import defaultdict
 
 
 """
-This script finds labels in a page set that
+This script finds labels or symbols in a page set that
 are associated with more than one button.
+Duplicates are tracked separately for pages with different languages 
 """
 
-parser = argparse.ArgumentParser(description="Allow flat to specify whether to check for duplicates of symbols, labels, or both.")
+parser = argparse.ArgumentParser(description="Allow user to specify whether to check for duplicates of symbols, labels, or both.")
 
 # Add arguments with optional flags
 parser.add_argument("action", nargs="?", default="default_action", help="Specify an action")
@@ -23,8 +24,10 @@ parser.add_argument("--symbol", action="store_true", help="Check for duplicate s
 
 args = parser.parse_args()
 
+#ignore the following  when checking for duplicate labels
 exceptions = ['!','.','0','1','10','10:00','11','11:00','12','12:00','13','14','15','16','17','18','19','1:00','2','20','2:00','3','3:00','4','4:00','5','5:00','6','6:00','7','7:00','8','8:00','9','9:00','?','A','A.M.','Abrir pizarra','Actividades de Boardmaker','Alexa','Alexa, baja el volumen','Alexa, cuelga','Alexa, hang up','Alexa, para','Alexa, play messages','Alexa, stop','Alexa, sube el volumen','Alexa, toca mis mensajes','Alexa, turn down volume','Alexa, turn up volume','Apoyos','Asia','Asistente de Google','Atrás','Australia','B','Back','Bajar volumen','Be quiet','C','Calibrar','China','Cinco de Mayo','Coca-Cola','Colombia','Controles del hogar','Copiar en botón','Copy to Button','Cosas divertidas','Costa Rica','D','DVD','Delete','E','F','Facebook','Fun Stuff','G','Google','H','Hey Siri, cancel','Hey Siri, next','Hey Siri, play','Hey Siri, previous','Hey Siri, turn down the volume','Hey Siri, turn up the volume','Home','Home Controls','India','Información','Information','Inicio','Israel','J','Jamaica','K','Kwanzaa','L','Lento: 1.2s','M','Medio: 1.0s','Mensajes','Mostrar estado','Move backward by character','Move forward by character','N','No','No device required. You must be signed into a Google account in Snap under Settings>User.','No requiere un dispositivo extra. Debe ingresar a su cuenta Google desde Snap en Configuración> Usuario.','O','Ok Google',' ','Ok Google, baja el volumen','Ok Google, sube el volumen','Ok Google, turn down the volume','Ok Google, turn up the volume','Oye Siri, anterior','Oye Siri, baja el volumen','Oye Siri, cancela','Oye Siri, para','Oye Siri, sigue','Oye Siri, siguiente','Oye Siri, sube el volumen','P','P.M.','PE','Pepsi','Pon el volumen','Portugal','Puerto Rico','Q','R','Rápido: 0.8s','S','Set volume','Silencio','Siri','Social Studies','Speak','Subir volumen','Sí','T','TV','Temporizador visual','Twitter','U','V','Venezuela','Venus','W','X','Y','Yes','YouTube','Z','Zoom']
-
+# should probably add exceptions list of symbol duplicates as well, and perhaps a list of pages to ignore
+# should make them parameters rather than hard-coded variables, or data files associated with page set
 
 for path in snappy.util.argPageSetsPaths():
     with PageSet(path) as pageSet:

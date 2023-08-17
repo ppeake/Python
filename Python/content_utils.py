@@ -25,27 +25,6 @@ guid = System.Guid('5e09eb03-e51d-4402-9aae-96380938a4b4')
 page = pageSet.LoadPage(guid)
 
 
-#To load a page by page name:
-
-import System
-from System import *
-from System.Linq import Enumerable
-from System.Collections.Generic import *
-from SQLite.Net import SQLiteConnection
-from Tdx.DataStructures import GenericObjectWrapper
-
-def pageWithTitle(pageSet, title):
-  
-#    Returns the (first) page with a given Title property.
- 
-    exe_lambda = lambda db: IEnumerable[GenericObjectWrapper[Guid]](db.Query[GenericObjectWrapper[Guid]]('SELECT UniqueId AS Item FROM Page WHERE Title == ?', title))    
-    exe_func = Func[SQLiteConnection, IEnumerable[GenericObjectWrapper[Guid]]](exe_lambda)
-    results = pageSet.Execute[IEnumerable[GenericObjectWrapper[Guid]]](exe_func)
-    firstOrDefault = Enumerable.FirstOrDefault[GenericObjectWrapper[Guid]](results)
-
-    if firstOrDefault:
-        return pageSet.LoadPage(firstOrDefault.Item)
-
 
 #To do a symbol search:
 import snappy
@@ -54,20 +33,6 @@ lm = GetLanguageModel('en')
 lm.SnappySymbolSearch('chicken')
 """
 
-#To load a page by page name:
-
-def pageWithTitle(pageSet, title):
-  
-#    Returns the (first) page with a given Title property.
- 
-    exe_lambda = lambda db: System.Collections.Generic.IEnumerable[GenericObjectWrapper[Guid]](db.Query[GenericObjectWrapper[Guid]]('SELECT UniqueId AS Item FROM Page WHERE Title == ?', title))    
-    exe_func = Func[SQLiteConnection, System.Collections.Generic.IEnumerable[GenericObjectWrapper[Guid]]](exe_lambda)
-    results = pageSet.Execute[System.Collections.Generic.IEnumerable[GenericObjectWrapper[Guid]]](exe_func)
-    firstOrDefault = Enumerable.FirstOrDefault[GenericObjectWrapper[Guid]](results)
-
-    if firstOrDefault:
-        return pageSet.LoadPage(firstOrDefault.Item)
-    
 
 
 def symbolSearch(searchTerm, lang = 'en'):
@@ -81,6 +46,7 @@ def symbolSearch(searchTerm, lang = 'en'):
 def removePage(page):
     """
     This function deletes a page from the page set.
+    DO NOT USE THIS FUNCTION EXCEPT FOR TEST PURPOSES FOR NOW
     """
     operation = page.PageSet.FactoryAddRemovePageOperation(page, "")
     operation.ExecuteAndInvert()
@@ -194,7 +160,7 @@ def generateVocabList(path, output = None, organization = 'Page', exceptions = [
 
     
 
-'''This function returns a dictionary or list of dictionaries with all of the metadata for a page set or folder of page sets'''
+'''This function returns a list of dictionaries or a table with all of the metadata for a page set or folder of page sets'''
 def getPagesetMetadata(paths = None, output = 'Table', recurseDirectories=False): #output can be 'Table' or 'Dictionary'
     propertiesList = ('ContentIdentifier','Language','ContentVersion','FriendlyName',
                   'SchemaVersion','GridDimension','Description','ToolbarLocation','ToolBarGridDimension',

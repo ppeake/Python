@@ -214,6 +214,7 @@ def getPagesetMetadata(paths = None, output = 'Table', recurseDirectories=False)
                             currentValue += f'{command.DescriptionKey},'
                 currentValue = str(currentValue)
                 currentDict[prop] = currentValue
+                print(currentValue)
     metadataTable = [] #a single table of all of the metadata for all the pagesets, with a column for each page set
     pagesetList = list(metadataDict.keys())
     for prop in propertiesList:
@@ -226,3 +227,17 @@ def getPagesetMetadata(paths = None, output = 'Table', recurseDirectories=False)
     elif output == 'Dictionary':
         return metadataDict
 
+
+
+# This function takes 2 dictionaries of metadata (from getPagesetMetadata) and compares them, returning a list of differences.
+# The first dictionary is the reference dictionary, which should contain the 'correct' values.
+# The 2nd dictionary should be read using getPagesetMetadata and will be tested against the reference dictionary.
+def checkPagesetMetadata(referenceDict, testDict):
+    differences = []
+    for contentIdentifier, dictionary in referenceDict.items():
+        for prop, referenceValue in dictionary.items():
+            testValue = testDict[contentIdentifier][prop]
+            if testValue != referenceValue:
+                differences.append((contentIdentifier, prop, referenceValue, testValue)) 
+
+    return differences

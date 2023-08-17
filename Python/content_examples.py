@@ -105,11 +105,8 @@ with open(filePath, "w", encoding="utf-8") as file: #specify encoding if working
 import json
 jsonString = json.dumps(dictionaryOrList, indent=4, ensure_ascii=False)  #ensure_ascii=False is needed to preserve international characters/ 
 
-# CONVERT JSON TO LIST
-with open(file_path, "r", encoding="utf-8") as file:
-    data_list = json.load(file)
 
-# CONVERT JSON TO LIST
+# CONVERT JSON TO LIST OR DICTIONARY
 with open(file_path, "r", encoding="utf-8") as file:
     data = json.load(file) #json.load automatically determines whether it is a list or a dictionary by the json format and returns the appropriate object
 

@@ -93,3 +93,33 @@ OffscreenButton1Commands    #this property is an interable list of commands (wit
 OffscreenButton2Commands    #same as above
 '''
 
+
+# WRITING TO A TEXT FILE
+# To output to a text file
+with open(filePath, "w", encoding="utf-8") as file: #specify encoding if working with any international strings. "w" means  write (overwrite), "a" means append
+    file.write(jsonString)
+# By using "with open" you don't have to worry about closing the file. It will automatically close when you exit the with block
+# 
+
+# CONVERT LIST OR DICTIONARY TO JSON
+import json
+jsonString = json.dumps(dictionaryOrList, indent=4, ensure_ascii=False)  #ensure_ascii=False is needed to preserve international characters/ 
+
+# CONVERT JSON TO LIST
+with open(file_path, "r", encoding="utf-8") as file:
+    data_list = json.load(file)
+
+# CONVERT JSON TO LIST
+with open(file_path, "r", encoding="utf-8") as file:
+    data = json.load(file) #json.load automatically determines whether it is a list or a dictionary by the json format and returns the appropriate object
+
+# POPULATING A DICTIONARY ON THE FLY
+from collections import defaultdict
+dictionary = defaultdict(set) # creates a blank dictionary where each key is associated with a set of multiple unique values.
+# can also use defaultdict(list) if you want each key to have a list of values where duplicates are allowed
+# defaultdict() will automatically create a new key if it doesn't exist, i.e. dictionary['newkey'].append('newvalue')
+# a normal dictionary dictionary = {} will not allow you to do this
+
+# TO MAKE A DICTIONARY OF DICTIONARIES, I.E. ONE DICTIONARY FOR EACH LANGUAGE (very common in pagesets):
+dictionary_of_dictionaries = {language: defaultdict(set) for language in languages} 
+#In this case, must already know all keys of top level dictionary. Probably there is a way to do it on the fly --  maybe defaultdict(defaultdict(set))?

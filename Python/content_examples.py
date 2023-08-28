@@ -32,6 +32,9 @@ pages = pageSet.AllPages() #Returns a list of all pages in the pageset
 # Note: not a true list
 # but an iterable object containing all the pages. You cannot index into it like a list
 # i.e. pages[0] will not work
+# NOTE#2: .AllPages() returns a Generator object. This is an iterable function that can only be iterated through once. After you have iterated through it, it is empty
+# and will not return anything, so you will need to reload the generator to iterate through it again. You can see that it is a generator by just entering pageSet.AllPages() 
+# in iPython and seeing the output. It will say <generator object _allPages at....>, telling you it is a generator.
 
 # TO GET SPECIFIC PAGE
 page = pageSet.PageWithTitle(pageTitle) #Returns the page with the given title
@@ -39,6 +42,8 @@ page = pageSet.PageWithTitle(pageTitle) #Returns the page with the given title
 
 # TO GET ALL BUTTONS ON A PAGE
 buttons = page.Buttons #Returns a list of all buttons on a page (not a true list)
+# Note: this is a Collection object, which is an iterable object that can be indexed into like a list. Unlike the Generator object, it can be iterated through multiple times
+# You can see this by typing page.Buttons in iPython. It will say <System.Collections.Generic.IEnumerable[Button] object...>, telling you it is a Collection object.
 
 # TO ACCESS PAGE SET PROPERTIES
 # The following properties can be access by simple dot notation, i.e. pageSet.property 

@@ -146,10 +146,10 @@ def generateVocabList(path, output = None, organization = 'Page', exceptions = [
                 pageList_str = ', '.join(sorted(pageList))
                 buffer.write(f'\n{label}: {pageList_str}')
     if output: #print to console
-        with open(output, 'w') as file:
+        with open(output, 'w', encoding="utf-8") as file:
             file.write(buffer.getvalue())
             buffer.close()
-    else: # print to consolve
+    else: # print to console
         print(buffer.getvalue())
 
     if organization == 'Page':
@@ -241,3 +241,6 @@ def checkPagesetMetadata(referenceDict, testDict):
                 differences.append((contentIdentifier, prop, referenceValue, testValue)) 
 
     return differences
+
+
+

@@ -38,6 +38,7 @@ for path in snappy.util.argPageSetsPaths():
 
         #Load exceptions file if one exists
         contentIdentifier = pageSet.ContentIdentifier
+        contentIdentifier = contentIdentifier.replace('/', '-')
         exceptionsPath = './exceptions.FindButtonsWithoutSymbols/' + contentIdentifier + '.json'
         exceptionsPath = os.path.abspath(exceptionsPath)
         if os.path.exists(exceptionsPath):

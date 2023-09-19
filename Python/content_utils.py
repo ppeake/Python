@@ -6,7 +6,7 @@ import snappy
 import snappy.util
 from snappy.util import *
 from Snap.Core.EntityModel import *
-from Snap.Core.Common import PageSetQueries
+from Snap.Core.Common import *
 from io import StringIO
 from collections import defaultdict
 import System
@@ -241,6 +241,27 @@ def checkPagesetMetadata(referenceDict, testDict):
                 differences.append((contentIdentifier, prop, referenceValue, testValue)) 
 
     return differences
+
+
+
+def getButtonOrder(pageSet, pageName, targetLayout, output = None): #layout is serialized layout in format [col,row,navButtonEnabled,0]
+    """This function returns a list of buttons in a page layout in the order they appear in the layout."""
+    page = pageSet.PageWithTitle(pageName)
+    buttonList = page.Buttons
+    elementList = page.Elements
+    pageLayoutList = page.PageLayouts
+    layout = next((layout for layout in pageLayoutList if layout.PageLayoutSetting.Serialize() == targetLayout), None)
+    placements = layout.ElementPlacements
+    buttonOrder = []
+    for placement in placements:
+        button = ElementPlacementExtensions.GetButton(placement)
+        gridPosition = placement.GridPosition.Serialize()
+        visible = placement.Visible
+        if button.Label is not None:
+            buttonOrder.append(button.Label)
+            print(button.Label)
+    return buttonOrder
+
 
 
 

@@ -17,6 +17,7 @@ def FindLinksToPage(pageSet,targetPage):
     #create dictionary of all links to all pages
     allPages = pageSet.AllPages()
     linksToPage = []
+    print(f'[pageName]/[buttonLabel]')
     for page in allPages:
         for button in page.Buttons:
             for command in button.CommandSequence.Commands:

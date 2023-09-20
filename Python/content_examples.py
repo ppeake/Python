@@ -34,6 +34,8 @@ pageSet = PageSet(path) #Loads pageset into variable pageSet
 pageSet = PageSet(path) #loads pageset into variable pageSet
 pageSet.Dispose() #closes pageset
 del pageSet #clears variable from namespace memory
+# NOTE: if writing a function/script, you should use a "with" block to automatically close the page set when the function/script is finished, i.e.:
+with PageSet(path) as pageSet: #loads the pageset into variable pageSet, then closes it when the with block is finished
 
 
 # TO GET ALL PAGES IN PAGE SET 

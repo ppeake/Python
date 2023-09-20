@@ -141,3 +141,64 @@ dictionary = defaultdict(set) # creates a blank dictionary where each key is ass
 dictionary_of_dictionaries = {language: defaultdict(set) for language in languages} 
 #In this case, must already know all keys of top level dictionary. Probably there is a way to do it on the fly --  maybe defaultdict(defaultdict(set))?
 
+
+
+#DOCUMENTATION FOR THE GIT DIFFTOOL THAT IS INTEGRATED INTO SNAPPY. 
+#It generates a text representation of the page set (currently only Motor Plan) that can be compared using a text diff tool
+#so you can quickly see the changes that were made across different versions.
+"""
+This script supports comparison of two page sets (.sps files) by generating
+text representations which can be compared using a typical diff tool.
+
+Usage:
+python -m snappy.util.spsdiff <local.sps> <remote.sps> <difftool> <additional difftool args...>
+
+<local.sps>
+The path to version A of the page set.
+
+<remote.sps>
+The path to version B of the page set.
+
+<difftool>
+A diff tool program to invoke for comparison of text files.
+
+<additional difftool args...>
+Arguments with which to invoke the difftool. At a minimum these would include
+the paths to two files to compare. Instances <local.sps> and <remote.sps> will
+be automatically replaced with generated text representation files. If no
+additional difftool arguments are provided <local.sps> <remoted.sps> will be
+used by default. 
+
+Git Integration
+===============
+This script is designed to be directly integrated with git, so that it can be
+invoked using "git difftool ..." to compare various versions of page set files
+in a repo. To do this, spsdiff must be declared as a difftool that can be used
+by git through the .gitconfig file. Take these lines added to .gitconfig as a
+concrete example:
+
+[difftool "spsdiff"]
+    cmd=python -m snappy.util.spsdiff \"$LOCAL\" \"$REMOTE\" meld \"$LOCAL\" \"$REMOTE\"
+
+This example declares spsdiff as a difftool available to git. spsdiff uses
+meld as the difftool to display text representations of page sets, which it
+invokes with two file arguments.
+
+With this example configuration the following can invoked to compare unstaged
+changes to MyPageSet.sps:
+git difftool -t spsdiff MyPageSet.sps
+
+Similarly two committed versions of a MyPageSet.sps can be compared using:
+git difftool -t spsdiff <commit-hash1> <commit-hash2> MyPageSet.sps
+
+To compare the current version of MyPageSet.sps to the previous commit:
+git difftool -t spsdiff HEAD~ MyPageSet.sps
+"""
+You can probably just pay attention the section on git integration.
+
+#TO INSTALL: Add the following to your .gitconfig file under /users/[username]/.gitconfig
+#You also will need to install the Meld text comparison tool, available at https://meld.app/
+'''
+[difftool "spsdiff"]
+    cmd=python -m snappy.util.spsdiff \"$LOCAL\" \"$REMOTE\" Meld \"$LOCAL\" \"$REMOTE\"
+    '''

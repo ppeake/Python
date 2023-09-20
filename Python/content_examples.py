@@ -45,6 +45,11 @@ buttons = page.Buttons #Returns a list of all buttons on a page (not a true list
 # Note: this is a Collection object, which is an iterable object that can be indexed into like a list. Unlike the Generator object, it can be iterated through multiple times
 # You can see this by typing page.Buttons in iPython. It will say <System.Collections.Generic.IEnumerable[Button] object...>, telling you it is a Collection object.
 
+
+#TO GET ALL BUTTON SYMBOLS IN A PAGE SET
+buttonSymbols = pageSet.ButtonSymbols() #Returns a list of all button symbols in the pageset as a list of tuples
+#each entry has format ([label], [symbolId]), i.e. ('cucumber', 578)
+
 # TO ACCESS PAGE SET PROPERTIES
 # The following properties can be access by simple dot notation, i.e. pageSet.property 
 # and will return a string or automatically convert to a string
@@ -97,7 +102,17 @@ OffscreenButton1Commands    #this property is an interable list of commands (wit
                             #Each command has a .DescriptionKey property that can be accessed and explains the key
 OffscreenButton2Commands    #same as above
 '''
+#NOTE: DO NOT USE page.Id -- Id values are for internal reference only and can change. Use page.UniqueId (need .ToString() to view it) if you need to reference an exact page
 
+# TO ACCESS BUTTON PROPERTIES
+button.Label
+button.SymbolId() # use this rather than button.Image
+button.BackgroundColor.Serialize() #returns color using Snap color values (what you see in the SQL database)
+button.BackgroundColor.ToString() #returns color in argb format as string, i.e. 'argb: #FFAF95D1'
+button.BackgroundColor.ToHSV() #returns color in HSV (hue/saturation/value) format as tuple, i.e. (189, 73, 209)
+button.ElementReference #returns the ElementReference of the button
+button.ContentType.ToString() #returns the content type of the button, i.e. 'Regular', 'Grammar', etc
+#NOTE: DO NOT USE button.Id -- Id values are for internal reference only and can change. Use button.UniqueId (need .ToString() to view it) if you need to reference an exact button
 
 # WRITING TO A TEXT FILE
 # To output to a text file
@@ -125,3 +140,4 @@ dictionary = defaultdict(set) # creates a blank dictionary where each key is ass
 # TO MAKE A DICTIONARY OF DICTIONARIES, I.E. ONE DICTIONARY FOR EACH LANGUAGE (very common in pagesets):
 dictionary_of_dictionaries = {language: defaultdict(set) for language in languages} 
 #In this case, must already know all keys of top level dictionary. Probably there is a way to do it on the fly --  maybe defaultdict(defaultdict(set))?
+

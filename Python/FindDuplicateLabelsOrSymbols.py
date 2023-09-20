@@ -25,6 +25,7 @@ parser = argparse.ArgumentParser(description="Allow user to specify whether to c
 parser.add_argument("action", nargs="?", default="default_action", help="Specify an action")
 parser.add_argument("--label", action="store_true", help="Check for duplicate labels")
 parser.add_argument("--symbol", action="store_true", help="Check for duplicate symbols")
+parser.add_argument("--ignoreLanguage", action="store_true", help="Do not separate by language")
 
 args = parser.parse_args()
 
@@ -38,7 +39,7 @@ def checkPatternNotInString(string, patternList):
             return False
     return True
 
-def isNotException(button, page, exceptions):
+def isNotException(button, page, exceptions): #takes a button label, page title, and dictionary containings tables of exceptions
     buttonExceptions = exceptions['buttonExceptions']
     pageExceptions = exceptions['pageExceptions']
     pageExceptionPatterns = exceptions['pageExceptionPatterns']
@@ -76,6 +77,7 @@ for path in snappy.util.argPageSetsPaths():
         pages = pageSet.AllPages()
         #get all languages in pageset
         languages = list(PageSetQueries.GetPageSetLanguages(pageSet))
+        languages.append("all") #add fake "all" language to store combined results
         #create a dictionary for each language of all of the labels used in the pageset and the buttons and pages they are used in
         labelDict = {language: defaultdict(set) for language in languages}
         #create a dictionary for each language of all of the symbols used in the pageset and the buttons and pages they are used in
@@ -94,6 +96,8 @@ for path in snappy.util.argPageSetsPaths():
                 currentLang = pageSet.Language #if page language is None, use the page set language
             currentLabelDict = labelDict[currentLang] #store values in dictionary for currentLang
             currentSymbolDict = symbolDict[currentLang]
+            globalLabelDict = labelDict['all'] #store values for all languages together
+            globalSymbolDict = symbolDict['all']
             buttons = page.Buttons
             for button in buttons:
                 #only include regular and grammar buttons
@@ -106,14 +110,18 @@ for path in snappy.util.argPageSetsPaths():
                         symbol = None
                     if label != None and isNotException(button, page, exceptions):
                         currentLabelDict[label].add(page.Title)
+                        globalLabelDict[label].add(page.Title)
                     if symbol != None and isNotException(button, page, exceptions):
                         currentSymbolDict[symbol].add((button.Label, page.Title))
+                        globalSymbolDict[symbol].add((button.Label, page.Title))
         #create list for each language of labels used more than once
         labelDupes = {language: [] for language in languages}
         symbolDupes = {language: [] for language in languages}
         for lang in languages:
             labelDupes[lang] = [(i[0], list(i[1])) for i in labelDict[lang].items() if len(i[1]) > 1]
             symbolDupes[lang] = [(i[0], list(i[1])) for i in symbolDict[lang].items() if len(i[1]) > 1]
+        globalLabelDupes = [(i[0], list(i[1])) for i in globalLabelDict.items() if len(i[1]) > 1]
+        globalSymbolDupes = [(i[0], list(i[1])) for i in globalSymbolDict.items() if len(i[1]) > 1]
         if args.label or args.action == 'default_action':
             #print labels used more than once
             # Check if any of the label dictionary entries have non-empty lists
@@ -140,4 +148,15 @@ for path in snappy.util.argPageSetsPaths():
                         print(f'\n{symbol}:')
                         for loc in sorted(locations, key=lambda x: x[1]):
                             print(f'\t{loc}')
+        if args.ignoreLanguage:
+            #print labels used more than once across all languages
+            # Check if any of the label dictionary entries have non-empty lists
+            duplicatesExist = any(len(list) > 0 for list in labelDupes.values())
+            if duplicatesExist:
+                print(f'\n***\nDUPLICATE LABELS\n***')
+                print(f'\n{len(globalLabelDupes)} labels used one more than one button label\n')
+                for label, pages in sorted(globalLabelDupes,key=lambda x: x[0]):
+                    print(f'\n{label}:')
+                    for page in sorted(pages):
+                        print(f'\t{page}')
 

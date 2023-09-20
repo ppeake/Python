@@ -27,6 +27,15 @@ from Tdx.DataStructures import GenericObjectWrapper
 path = r'C:\Users\ytao\Desktop\Active Projects\Snap Final Builds NEW\en_US\CoreFirst en-US 1.28.1.126.sps' 
 pageSet = PageSet(path) #Loads pageset into variable pageSet
 
+
+# TO CLOSE A PAGE SET
+# once you load a page set using the PageSet() function, it will lock up the file until you quit iPython or close the page set.
+# You can close it manually with the following:
+pageSet = PageSet(path) #loads pageset into variable pageSet
+pageSet.Dispose() #closes pageset
+del pageSet #clears variable from namespace memory
+
+
 # TO GET ALL PAGES IN PAGE SET 
 pages = pageSet.AllPages() #Returns a list of all pages in the pageset
 # Note: not a true list
@@ -91,6 +100,7 @@ AccessMethodType
 GridDimension
 ToolBarGridDimension  #will have no value if Toolbar matches page set
 LanguageSettingsCollection  #contains Automorph Model, Automrph Grammar Buttons, and Form Contractions for each language in page set
+UniqueId
 '''
 
 #The following properties can only be accessed through further sub-properties

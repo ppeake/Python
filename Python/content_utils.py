@@ -265,3 +265,25 @@ def getButtonOrder(pageSet, pageName, targetLayout, output = None): #layout is s
 
 
 
+def checkPatternNotInString(string, patternList):
+    """
+    Returns False if string matches any pattern in patternList
+    """
+    for pattern in patternList:
+        if fnmatch(string, pattern):
+            return False
+    return True
+
+def isNotException(button, page, exceptions): #takes a button object, page object , and dictionary containings tables of exceptions
+    buttonExceptions = exceptions['buttonExceptions']
+    pageExceptions = exceptions['pageExceptions']
+    pageExceptionPatterns = exceptions['pageExceptionPatterns']
+    bgColorExceptions = exceptions['bgColorExceptions']
+    if (button.Label not in buttonExceptions and 
+        page.Title not in pageExceptions and 
+        checkPatternNotInString(page.Title, pageExceptionPatterns) and 
+        button.BackgroundColor.Serialize() not in bgColorExceptions
+    ):
+        return True
+    else:
+        return False
